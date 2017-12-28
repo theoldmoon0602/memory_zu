@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+<style>
+#app {
+	width: 480px;
+	margin: 0 auto;
+}
+ul {
+	width: 100%;
+	margin: 0 auto;
+	margin-top: 30px;
+	padding: 0;
+	list-style: none;
+}
+ul:before {
+	content: "↑ Low";
+}
+ul:after {
+	content: "↓High";
+}
+li {
+	height: 40px;
+	width: 100%;
+}
+.memory {
+	width: 60%;
+	height: 100%;
+	display: inline-block;
+	text-align: center;
+	line-height: 250%; 
+
+	border: 2px solid #000;
+	border-top: none;
+}
+.pointer {
+	padding-left: 2em;
+}
+</style>
+</head>
+<body>
+	<div id="app">
+	<button v-on:click="addmemory">Add</button>
+	<button v-on:click="callstack">CallStack</button>
+	<ul>
+		<li v-for="memory in memories">
+			<span class="memory" contenteditable>{{ memory.content }}</span>
+			<span class="pointer" contenteditable>{{ memory.pointer }}</span>
+		</li>
+	</ul>
+	</div>
+	
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: {
+			memories:[]
+		},
+		methods: {
+			addmemory: function(e) {
+				this.memories.unshift({content: "", pointer: "0xXXXXXXXX"});
+			},
+			callstack: function(e) {
+				this.memories.splice(0);
+				this.memories.unshift({content: "", pointer: ""});
+				this.memories.unshift({content: "arg1", pointer: "ebp+8"});
+				this.memories.unshift({content: "ret_addr", pointer: "ebp+4"});
+				this.memories.unshift({content: "save_ebp", pointer: "ebp"});
+				this.memories.unshift({content: "stack_canary", pointer: "ebp-12"});
+				this.memories.unshift({content: "local1", pointer: "ebp-16"});
+				this.memories.unshift({content: "", pointer: ""});
+			}
+		},
+		mounted: function() {
+			this.callstack(null);
+		}
+	});
+</script>
+</body>
+</html>
