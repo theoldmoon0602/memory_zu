@@ -43,6 +43,7 @@ li {
 <body>
 	<div id="app">
 	<button v-on:click="addmemory">Add</button>
+	<button v-on:click="clear">Clear</button>
 	<button v-on:click="callstack">CallStack</button>
 	<ul>
 		<li v-for="memory in memories">
@@ -61,7 +62,7 @@ li {
 		},
 		methods: {
 			addmemory: function(e) {
-				this.memories.unshift({content: "", pointer: "0xXXXXXXXX"});
+				this.memories.unshift({content: "", pointer: ""});
 			},
 			callstack: function(e) {
 				this.memories.splice(0);
@@ -72,6 +73,9 @@ li {
 				this.memories.unshift({content: "stack_canary", pointer: "ebp-12"});
 				this.memories.unshift({content: "local1", pointer: "ebp-16"});
 				this.memories.unshift({content: "", pointer: ""});
+			},
+			clear: function(e) {
+				this.memories.splice(0);
 			}
 		},
 		mounted: function() {
