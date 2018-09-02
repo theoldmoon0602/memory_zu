@@ -15,12 +15,6 @@ ul {
 	padding: 0;
 	list-style: none;
 }
-ul:before {
-	content: "↑ Low";
-}
-ul:after {
-	content: "↓High";
-}
 li {
 	height: 40px;
 	width: 100%;
@@ -44,13 +38,17 @@ li {
 	<div id="app">
 	<button v-on:click="addmemory">Add</button>
 	<button v-on:click="clear">Clear</button>
+	<button v-on:click="reverse">Reverse</button>
 	<button v-on:click="callstack">CallStack</button>
+
+  <p>↑{{low_str}}</p>
 	<ul>
-		<li v-for="memory in memories">
-			<span class="memory" contenteditable>{{ memory.content }}</span>
+		<li v-for="(memory, index) in memories">
+			<span class="memory" contenteditable @focus="focus_i = index" >{{ memory.content }}</span>
 			<span class="pointer" contenteditable>{{ memory.pointer }}</span>
 		</li>
 	</ul>
+  <p>↓{{high_str}}</p>
 	</div>
 	
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -58,14 +56,17 @@ li {
 	var app = new Vue({
 		el: '#app',
 		data: {
-			memories:[]
+			memories:[],
+      focus_i: 0,
+      low_str: "Low",
+      high_str: "High",
 		},
 		methods: {
 			addmemory: function(e) {
-				this.memories.unshift({content: "", pointer: ""});
+				this.memories.splice(this.focus_i , 0, {content: "", pointer: ""});
 			},
 			callstack: function(e) {
-				this.memories.splice(0);
+				this.memories.splice(0, this.memories.length);
 				this.memories.unshift({content: "", pointer: ""});
 				this.memories.unshift({content: "arg1", pointer: "ebp+8"});
 				this.memories.unshift({content: "ret_addr", pointer: "ebp+4"});
@@ -75,8 +76,14 @@ li {
 				this.memories.unshift({content: "", pointer: ""});
 			},
 			clear: function(e) {
-				this.memories.splice(0);
-			}
+				this.memories.splice(0, this.memories.length);
+			},
+      reverse: function(e) {
+        this.memories.reverse();
+        let tmp = this.low_str;
+        this.low_str = this.high_str;
+        this.high_str = tmp;
+      }
 		},
 		mounted: function() {
 			this.callstack(null);
